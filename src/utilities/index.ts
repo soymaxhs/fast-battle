@@ -34,3 +34,41 @@ export function getPlayerDiceRolls(): Array<number> {
   return playerRound.map(() => getRandomDiceRoll());
 
 }
+
+/**
+ * Returns the highest dice roll that appears only once in the array.
+ *
+ * @summary Finds the unique maximum roll.
+ * @description This function counts occurrences of each dice value and returns
+ * the highest roll that occurred exactly once. If no such value exists, it returns -1.
+ *
+ * @example
+ * getUniqueMaxDiceRoll([1, 2, 5, 4, 5]); // returns 4
+ * getUniqueMaxDiceRoll([2, 2, 4, 4, 4]); // returns -1
+ *
+ * @param {number[]} diceRolls - An array of dice roll integers (1–6).
+ * @returns {number} The highest roll that occurred exactly once, or -1 if none.
+ */
+export function getUniqueMaxDiceRoll(diceRolls: Array<number>): number {
+  // Count occurrences of each roll
+  const diceRollsCounters = diceRolls.reduce((diceRollsCounter: Array<{roll: number, count: number}>, diceRoll: number) => {
+    // Check if the roll already exists in the counter
+    const existingRoll = diceRollsCounter.find((dice) => dice.roll === diceRoll);
+
+    // If it exists, increment the count, otherwise add a new entry
+    if (existingRoll) {
+      existingRoll.count += 1;
+    } else {
+      diceRollsCounter.push({ roll: diceRoll, count: 1 });
+    }
+
+    return diceRollsCounter;
+  }
+  , []);
+  
+  // Filter for unique rolls (count === 1) and map to get the roll values
+  const uniqueRolls = diceRollsCounters.filter((diceRoll) => diceRoll.count === 1).map((diceRoll) => diceRoll.roll);
+  
+  // Return the maximum unique roll or -1 if none exist
+  return uniqueRolls.length > 0 ? Math.max(...uniqueRolls) : -1;
+}
