@@ -1,14 +1,4 @@
-/**
- * Enum representing the six faces of a standard 6-sided dice.
- */
-export enum DICE {
-  D1 = 1,
-  D2 = 2,
-  D3 = 3,
-  D4 = 4,
-  D5 = 5,
-  D6 = 6,
-}
+import { DICE, ROLL_TYPE } from "@/config/constants";
 
 /**
  * Represents a single valid dice roll (values from 1 to 6).
@@ -22,9 +12,20 @@ export type DiceRoll =
   | DICE.D6;
 
 /**
- * Represents a list of dice rolls.
+ * Represents a standard roll of 5 dice in a normal round.
  */
-export type DiceRolls = DiceRoll[];
+export type NormalDiceRolls = [
+  DiceRoll,
+  DiceRoll,
+  DiceRoll,
+  DiceRoll,
+  DiceRoll
+];
+
+/**
+ * Represents a sudden death roll of 3 dice (used in case of a tie).
+ */
+export type SuddenDeathDiceRolls = [DiceRoll, DiceRoll, DiceRoll];
 
 /**
  * Represents a player in the game.
@@ -34,24 +35,46 @@ export type Player = {
   id: string;
   /** Player's display name */
   name: string;
+  /** Total victories accumulated in the session */
+  victories: number;
 };
 
 /**
- * Represents multiple players in the game.
+ * Player round with normal dice roll.
  */
-export type Players = Player[];
-
-/**
- * Represents a player's round in the game.
- * This includes the player's information and their dice rolls for the current round.
- */
-export type PlayerRound = Player & {
-  /** The player's dice rolls for the current round */
-  diceRolls: DiceRolls;
+export type PlayerNormalRound = {
+  playerId: Player["id"];
+  rollType: ROLL_TYPE.NORMAL;
+  diceRolls: NormalDiceRolls;
 };
 
 /**
- * Represents multiple players round in the game.
- * This is an array of PlayerRound objects, each representing a player's round.
+ * Player round with sudden death dice roll.
+ */
+export type PlayerSuddenDeathRound = {
+  playerId: Player["id"];
+  rollType: ROLL_TYPE.SUDDEN_DEATH;
+  diceRolls: SuddenDeathDiceRolls;
+};
+
+/**
+ * Represents a player's round (normal or sudden death).
+ */
+export type PlayerRound = PlayerNormalRound | PlayerSuddenDeathRound;
+
+/**
+ * Represents multiple player rounds in the same phase.
  */
 export type PlayersRound = PlayerRound[];
+
+/**
+ * Represents the full state of the game.
+ */
+export type GameState = {
+  /** Current players */
+  players: Player[];
+  /** History of all completed rounds */
+  history: PlayersRound[];
+  /** Player currently starting the round */
+  currentPlayerId: number;
+};
