@@ -7,7 +7,7 @@ import {
   getUniqueMinDiceRoll,
 } from "@/utilities";
 import type { PlayersRound } from "@/types";
-import { NORMAL_ROLL, ROLL_TYPE } from "@/config/constants";
+import { NORMAL_ROLL, ROLL_TYPE, SUDDEN_DEATH_ROLL } from "@/config/constants";
 
 describe("getRandomDiceRoll", () => {
   it("should returns a number", () => {
@@ -52,7 +52,7 @@ describe("getPlayerDiceRolls", () => {
 
   describe("with sudden death roll", () => {
     it("should return an array of length 3", () => {
-      const result = getPlayerDiceRolls(3);
+      const result = getPlayerDiceRolls(SUDDEN_DEATH_ROLL);
       expect(result.length).toBe(3);
     });
   });
@@ -117,13 +117,25 @@ describe("getUniqueMinDiceRoll", () => {
 describe("getNormalRoundWinnerPlayers", () => {
   it("should return the winner players", () => {
     const playersRound: PlayersRound = [
-      { playerId: "1", rollType: ROLL_TYPE.NORMAL, diceRolls: [1, 2, 3, 4, 5] },
-      { playerId: "2", rollType: ROLL_TYPE.NORMAL, diceRolls: [2, 3, 4, 5, 6] },
-      { playerId: "3", rollType: ROLL_TYPE.NORMAL, diceRolls: [3, 4, 5, 6, 1] },
+      {
+        playerIndex: 0,
+        rollType: ROLL_TYPE.NORMAL,
+        diceRolls: [1, 2, 3, 4, 5],
+      },
+      {
+        playerIndex: 1,
+        rollType: ROLL_TYPE.NORMAL,
+        diceRolls: [2, 3, 4, 5, 6],
+      },
+      {
+        playerIndex: 2,
+        rollType: ROLL_TYPE.NORMAL,
+        diceRolls: [3, 4, 5, 6, 1],
+      },
     ];
 
     const result = getNormalRoundWinnerPlayers(playersRound);
-    expect(result).toEqual(["2", "3"]);
+    expect(result).toEqual([1, 2]);
   });
 });
 
@@ -131,23 +143,23 @@ describe("getSuddenDeathRoundWinnerPlayers", () => {
   it("should return the winner players", () => {
     const playersRound: PlayersRound = [
       {
-        playerId: "1",
+        playerIndex: 0,
         rollType: ROLL_TYPE.SUDDEN_DEATH,
         diceRolls: [1, 2, 3],
       },
       {
-        playerId: "2",
+        playerIndex: 1,
         rollType: ROLL_TYPE.SUDDEN_DEATH,
         diceRolls: [2, 3, 4],
       },
       {
-        playerId: "3",
+        playerIndex: 2,
         rollType: ROLL_TYPE.SUDDEN_DEATH,
         diceRolls: [3, 4, 5],
       },
     ];
 
     const result = getSuddenDeathRoundWinnerPlayers(playersRound);
-    expect(result).toEqual(["1"]);
+    expect(result).toEqual([0]);
   });
 });

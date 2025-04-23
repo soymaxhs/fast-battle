@@ -1,14 +1,9 @@
-/**
- * Enum representing the six faces of a standard 6-sided dice.
- */
-export enum DICE {
-  D1 = 1,
-  D2 = 2,
-  D3 = 3,
-  D4 = 4,
-  D5 = 5,
-  D6 = 6,
-}
+import {
+  NormalDiceRolls,
+  Player,
+  PlayersRound,
+  SuddenDeathDiceRolls,
+} from "@/types";
 
 /**
  * Represents a collection of dice rolls.
@@ -30,3 +25,30 @@ export const NORMAL_ROLL = 5;
  * This roll type is used in case of a tie between players.
  */
 export const SUDDEN_DEATH_ROLL = 3;
+
+export const DEFAULT_PLAYERS: Player[] = [
+  {
+    name: "Maximiliano Heredia Santoyo",
+    victories: 0,
+  },
+  {
+    name: "John Doe",
+    victories: 0,
+  },
+];
+
+export const DEFAULT_NORMAL_ROLLS = [1, 2, 3, 4, 5] as NormalDiceRolls;
+export const DEFAULT_SUDDEN_DEATH_ROLLS = [1, 2, 3] as SuddenDeathDiceRolls;
+
+export const DEFAULT_PLAYERS_ROUND: PlayersRound = [
+  {
+    playerIndex: 0,
+    rollType: ROLL_TYPE.NORMAL,
+    diceRolls: DEFAULT_NORMAL_ROLLS,
+  },
+  {
+    playerIndex: 1,
+    rollType: ROLL_TYPE.NORMAL,
+    diceRolls: DEFAULT_NORMAL_ROLLS,
+  },
+];

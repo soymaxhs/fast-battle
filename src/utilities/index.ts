@@ -1,4 +1,4 @@
-import type { DiceRoll, Player, PlayersRound } from "@/types";
+import type { DiceRoll, PlayersRound } from "@/types";
 
 /**
  * Simulates a roll of a standard 6-sided dice.
@@ -14,7 +14,7 @@ import type { DiceRoll, Player, PlayersRound } from "@/types";
  * @returns {DiceRoll} A random integer between 1 and 6.
  */
 export function getRandomDiceRoll(): DiceRoll {
-  return Math.floor(Math.random() * 6) + 1;
+  return (Math.floor(Math.random() * 6) + 1) as DiceRoll;
 }
 
 /**
@@ -66,7 +66,9 @@ export function getUniqueMaxDiceRoll(
     .filter((diceRoll) => diceRoll.count === 1)
     .map((diceRoll) => diceRoll.roll);
 
-  return uniqueRolls.length > 0 ? Math.max(...uniqueRolls) : undefined;
+  return uniqueRolls.length > 0
+    ? (Math.max(...uniqueRolls) as DiceRoll)
+    : undefined;
 }
 
 /**
@@ -103,7 +105,9 @@ export function getUniqueMinDiceRoll(
     .filter((diceRoll) => diceRoll.count === 1)
     .map((diceRoll) => diceRoll.roll);
 
-  return uniqueRolls.length > 0 ? Math.min(...uniqueRolls) : undefined;
+  return uniqueRolls.length > 0
+    ? (Math.min(...uniqueRolls) as DiceRoll)
+    : undefined;
 }
 
 /**
@@ -113,11 +117,11 @@ export function getUniqueMinDiceRoll(
  * @description Each player's dice roll is evaluated for its highest unique value. The player(s) with the highest unique value win.
  *
  * @param {PlayersRound} playersRound - Array of players with their round data.
- * @returns {Player["id"][]} Array of player IDs that won the round.
+ * @returns {number[]} Array of player IDs that won the normal round.
  */
 export function getNormalRoundWinnerPlayers(
   playersRound: PlayersRound
-): Player["id"][] {
+): number[] {
   const playersWithMaxRoll = playersRound.map((player) => ({
     ...player,
     maxRoll: getUniqueMaxDiceRoll(player.diceRolls),
@@ -129,7 +133,7 @@ export function getNormalRoundWinnerPlayers(
 
   return playersWithMaxRoll
     .filter((player) => Number(player.maxRoll) === maxRoll)
-    .map(({ playerId }) => playerId);
+    .map(({ playerIndex }) => playerIndex);
 }
 
 /**
@@ -139,11 +143,11 @@ export function getNormalRoundWinnerPlayers(
  * @description Similar to normal round, but uses the lowest unique value instead of the highest.
  *
  * @param {PlayersRound} playersRound - Array of players with their sudden death round data.
- * @returns {Player["id"][]} Array of player IDs that won the sudden death round.
+ * @returns {number[]} Array of player IDs that won the sudden death round.
  */
 export function getSuddenDeathRoundWinnerPlayers(
   playersRound: PlayersRound
-): Player["id"][] {
+): number[] {
   const playersWithMinRoll = playersRound.map((player) => ({
     ...player,
     minRoll: getUniqueMinDiceRoll(player.diceRolls),
@@ -155,5 +159,5 @@ export function getSuddenDeathRoundWinnerPlayers(
 
   return playersWithMinRoll
     .filter((player) => Number(player.minRoll) === minRoll)
-    .map(({ playerId }) => playerId);
+    .map(({ playerIndex }) => playerIndex);
 }

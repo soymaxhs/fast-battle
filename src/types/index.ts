@@ -1,15 +1,9 @@
-import { DICE, ROLL_TYPE } from "@/config/constants";
+import { ROLL_TYPE } from "@/config/constants";
 
 /**
  * Represents a single valid dice roll (values from 1 to 6).
  */
-export type DiceRoll =
-  | DICE.D1
-  | DICE.D2
-  | DICE.D3
-  | DICE.D4
-  | DICE.D5
-  | DICE.D6;
+export type DiceRoll = 1 | 2 | 3 | 4 | 5 | 6;
 
 /**
  * Represents a standard roll of 5 dice in a normal round.
@@ -31,8 +25,6 @@ export type SuddenDeathDiceRolls = [DiceRoll, DiceRoll, DiceRoll];
  * Represents a player in the game.
  */
 export type Player = {
-  /** Unique identifier of the player */
-  id: string;
   /** Player's display name */
   name: string;
   /** Total victories accumulated in the session */
@@ -43,7 +35,7 @@ export type Player = {
  * Player round with normal dice roll.
  */
 export type PlayerNormalRound = {
-  playerId: Player["id"];
+  playerIndex: number;
   rollType: ROLL_TYPE.NORMAL;
   diceRolls: NormalDiceRolls;
 };
@@ -52,7 +44,7 @@ export type PlayerNormalRound = {
  * Player round with sudden death dice roll.
  */
 export type PlayerSuddenDeathRound = {
-  playerId: Player["id"];
+  playerIndex: number;
   rollType: ROLL_TYPE.SUDDEN_DEATH;
   diceRolls: SuddenDeathDiceRolls;
 };
@@ -73,8 +65,12 @@ export type PlayersRound = PlayerRound[];
 export type GameState = {
   /** Current players */
   players: Player[];
-  /** History of all completed rounds */
-  history: PlayersRound[];
   /** Player currently starting the round */
-  currentPlayerId: number;
+  currentPlayerIndex: number;
+  /** History of all completed rounds */
+  historyRounds: PlayersRound[];
+  /** Current round of the game */
+  currentRoundIndex: number;
+  /** Current round roll type */
+  currentRollType: ROLL_TYPE;
 };
