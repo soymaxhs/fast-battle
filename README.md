@@ -11,6 +11,8 @@ A **Next.js 15 / React 19** mini‑game that pits players against each other i
   <img src="https://img.shields.io/badge/Jest-29-C21325?logo=jest" />
 </p>
 
+![image](https://github.com/user-attachments/assets/10745409-ef73-4a1d-bfdc-0db84a2488e7)
+
 ---
 
 ## ✨ Tech Stack
