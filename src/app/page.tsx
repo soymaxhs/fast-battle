@@ -233,11 +233,11 @@ export default function MainPage() {
 
   return (
     <Container className="py-5">
-      <Row>
-        <Col>
+      <Row className="justify-content-center align-items-center mb-5">
+        <Col md={"auto"}>
           <h1 className="text-center mb-5">Speed Battle Dice Game</h1>
         </Col>
-        <Col>
+        <Col md={"auto"}>
           <small>
             <FormCheck
               type="switch"
@@ -255,6 +255,11 @@ export default function MainPage() {
               disabled={showExperimentalMode}
             />
           </small>
+        </Col>
+        <Col md={"auto"}>
+          <a href="https://github.com/soymaxhs/fast-battle" target="_blank">
+            https://github.com/soymaxhs/fast-battle
+          </a>
         </Col>
       </Row>
 
