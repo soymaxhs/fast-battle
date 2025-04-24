@@ -32,6 +32,8 @@ import {
 } from "react-bootstrap";
 
 /**
+ * TODO: IMPORTANT - Extract client components to their own files.
+ *
  * MainPage renders the homepage with a title and two player cards.
  * Uses React Bootstrap for layout and styling.
  *
@@ -39,7 +41,7 @@ import {
  */
 export default function MainPage() {
   const [showRules, setShowRules] = useState(true);
-  const [experimentalMode, setExperimentalMode] = useState(false);
+  const [showExperimentalMode, setShowExperimentalMode] = useState(false);
   const [gameState, setGameState] = useState<GameState>({
     currentRollType: ROLL_TYPE.NORMAL,
     players: DEFAULT_PLAYERS,
@@ -55,7 +57,8 @@ export default function MainPage() {
    * Handles the click event for the roll button.
    * Simulates rolling dice for both players and updates the game state.
    *
-   * TODO: IMPORTANT - Optimize the game state update logic.
+   * TODO: IMPORTANT - Smelly handler
+   * TODO: Refactor this function to improve readability, consistency, simplicity and maintainability.
    */
   const handleRollClick = () => {
     const {
@@ -68,9 +71,10 @@ export default function MainPage() {
     const playersCount = players.length;
 
     if (currentRollType === ROLL_TYPE.NORMAL) {
-      const newCurrentPlayersRound: PlayersRound = [...currentPlayersRound];
+      /** Generates new player dice rolls for the current player. */
       const newNormalDiceRolls = getPlayerDiceRolls(NORMAL_ROLL);
-
+      const newCurrentPlayersRound: PlayersRound = [...currentPlayersRound];
+      // TODO: Smelly code - Refactor this to a utility function.
       newCurrentPlayersRound[currentPlayerIndex] = {
         playerIndex: currentPlayerIndex,
         rollType: currentRollType,
@@ -82,19 +86,19 @@ export default function MainPage() {
           newNormalDiceRolls[4],
         ],
       };
-
       setCurrentPlayersRound(newCurrentPlayersRound);
 
       if (currentPlayerIndex + 1 === playersCount) {
-        const normalRoundWinnerPlayers = getNormalRoundWinnerPlayers(
+        /** Gets the winner players of the current round. */
+        const normalRoundWinnerPlayersIndex = getNormalRoundWinnerPlayers(
           newCurrentPlayersRound
         );
 
-        if (normalRoundWinnerPlayers.length === 1) {
+        /** Checks if there is a single winner for the current round. */
+        if (normalRoundWinnerPlayersIndex.length === 1) {
+          /** Updates the game state to the next round with a single winner. */
           const newPlayers = [...players];
-
-          newPlayers[normalRoundWinnerPlayers[0]].victories += 1;
-
+          newPlayers[normalRoundWinnerPlayersIndex[0]].victories += 1;
           const newGameState: GameState = {
             ...gameState,
             players: newPlayers,
@@ -104,6 +108,7 @@ export default function MainPage() {
           };
           setGameState(newGameState);
         } else {
+          /** Updates the game state to the next sudden death round for multiple winners. */
           const newGameState: GameState = {
             ...gameState,
             currentPlayerIndex: 0,
@@ -113,15 +118,19 @@ export default function MainPage() {
           };
           setGameState(newGameState);
 
-          setCurrentPlayersRound((prevState) =>
-            prevState.map((player) => ({
-              ...player,
-              rollType: ROLL_TYPE.SUDDEN_DEATH,
-              diceRolls: DEFAULT_SUDDEN_DEATH_ROLLS,
-            }))
-          );
+          /** Updates the current players round to sudden death round. */
+          setTimeout(() => {
+            setCurrentPlayersRound((prevState) =>
+              prevState.map((player) => ({
+                ...player,
+                rollType: ROLL_TYPE.SUDDEN_DEATH,
+                diceRolls: DEFAULT_SUDDEN_DEATH_ROLLS,
+              }))
+            );
+          }, 500);
         }
       } else {
+        /** Updates the game state to the next player. */
         setGameState((prevState) => ({
           ...prevState,
           currentPlayerIndex: currentPlayerIndex + 1,
@@ -130,9 +139,10 @@ export default function MainPage() {
     }
 
     if (currentRollType === ROLL_TYPE.SUDDEN_DEATH) {
-      const newCurrentPlayersRound: PlayersRound = [...currentPlayersRound];
+      /** Generates new player dice rolls for the current player. */
       const newSuddenDeathDiceRolls = getPlayerDiceRolls(SUDDEN_DEATH_ROLL);
-
+      const newCurrentPlayersRound: PlayersRound = [...currentPlayersRound];
+      // TODO: Smelly code - Refactor this to a utility function.
       newCurrentPlayersRound[currentPlayerIndex] = {
         playerIndex: currentPlayerIndex,
         rollType: currentRollType,
@@ -142,19 +152,19 @@ export default function MainPage() {
           newSuddenDeathDiceRolls[2],
         ],
       };
-
       setCurrentPlayersRound(newCurrentPlayersRound);
 
       if (currentPlayerIndex + 1 === playersCount) {
+        /** Gets the winner players of the current round. */
         const suddenDeathRoundWinnerPlayers = getSuddenDeathRoundWinnerPlayers(
           newCurrentPlayersRound
         );
 
+        /** Checks if there is a single winner for the current round. */
         if (suddenDeathRoundWinnerPlayers.length === 1) {
+          /** Updates the game state to the next round with a single winner. */
           const newPlayers = [...players];
-
           newPlayers[suddenDeathRoundWinnerPlayers[0]].victories += 1;
-
           const newGameState: GameState = {
             ...gameState,
             players: newPlayers,
@@ -165,14 +175,18 @@ export default function MainPage() {
           };
           setGameState(newGameState);
 
-          setCurrentPlayersRound((prevState) =>
-            prevState.map((player) => ({
-              ...player,
-              rollType: ROLL_TYPE.NORMAL,
-              diceRolls: DEFAULT_NORMAL_ROLLS,
-            }))
-          );
+          /** Updates the current players round to normal round. */
+          setTimeout(() => {
+            setCurrentPlayersRound((prevState) =>
+              prevState.map((player) => ({
+                ...player,
+                rollType: ROLL_TYPE.NORMAL,
+                diceRolls: DEFAULT_NORMAL_ROLLS,
+              }))
+            );
+          }, 500);
         } else {
+          /** Updates the game state to the next sudden death round for multiple winners. */
           const newGameState: GameState = {
             ...gameState,
             currentPlayerIndex: 0,
@@ -182,6 +196,7 @@ export default function MainPage() {
           setGameState(newGameState);
         }
       } else {
+        /** Updates the game state to the next player. */
         setGameState((prevState) => ({
           ...prevState,
           currentPlayerIndex: currentPlayerIndex + 1,
@@ -190,6 +205,7 @@ export default function MainPage() {
     }
   };
 
+  /** Experimental function to add a new player. */
   const handleCreatePlayerClick = () => {
     const newPlayer = {
       name: `Player ${gameState.players.length + 1}`,
@@ -220,6 +236,8 @@ export default function MainPage() {
       <Row>
         <Col>
           <h1 className="text-center mb-5">Speed Battle Dice Game</h1>
+        </Col>
+        <Col>
           <small>
             <FormCheck
               type="switch"
@@ -232,12 +250,20 @@ export default function MainPage() {
             <FormCheck
               type="switch"
               label="Experimental Mode"
-              checked={experimentalMode}
-              onChange={(e) => setExperimentalMode(e.target.checked)}
-              disabled={experimentalMode}
+              checked={showExperimentalMode}
+              onChange={(e) => setShowExperimentalMode(e.target.checked)}
+              disabled={showExperimentalMode}
             />
           </small>
-          {showRules && <Rules />}
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>{showRules && <Rules />}</Col>
+      </Row>
+
+      <Row>
+        <Col>
           <h2
             className={`text-center mb-4 ${
               gameState.currentRollType === ROLL_TYPE.NORMAL
@@ -254,6 +280,7 @@ export default function MainPage() {
 
       <Row className="justify-content-center">
         {gameState.players?.map((player, index) => (
+          /* TODO: Create a PlayerCard component */
           <Col key={index} xs={12} md={6} className="mb-4">
             <Card>
               <CardBody>
@@ -266,7 +293,7 @@ export default function MainPage() {
             </Card>
           </Col>
         ))}
-        {experimentalMode && (
+        {showExperimentalMode && (
           <Col xs={12} md={6} className="mb-4">
             <Card>
               <CardBody>
@@ -286,18 +313,24 @@ export default function MainPage() {
 
       <Row>
         <Col className="text-center">
-          <button className="btn btn-primary" onClick={handleRollClick}>
-            {`${gameState.players[gameState.currentPlayerIndex].name} Roll!`}
+          <button
+            className="btn btn-primary btn-lg py-3 px-5"
+            onClick={handleRollClick}
+          >
+            {`${gameState.players[gameState.currentPlayerIndex].name} 🔲Roll🔲`}
           </button>
         </Col>
       </Row>
 
-      {/** TODO: IMPORTANT - Optimize the history rendering */}
-      <Row className="mt-4">
-        <Col md={{ span: 8, offset: 2 }}>
+      <Row className="mt-5">
+        <Col>
+          {/**
+           * TODO: Create a GameHistory component
+           * TODO: Refactor this pseudo component to improve readability, consistency, simplicity and maintainability.
+           */}
           <h3 className="mb-3 text-center">History</h3>
 
-          {gameState.historyRounds.map((round, idx) => {
+          {gameState.historyRounds.toReversed().map((round, idx) => {
             const isNormal = round[0].rollType === ROLL_TYPE.NORMAL;
             const headerVar = isNormal ? "bg-primary" : "bg-danger";
             const headerTxt = isNormal ? "Normal Round" : "Sudden-Death Round";
@@ -312,13 +345,13 @@ export default function MainPage() {
               .join(", ");
 
             return (
-              <Card key={idx} className="mb-3 shadow-sm">
+              <Card key={idx} className="mb-3 shadow-sm w-100">
                 <Card.Header className={`${headerVar} text-white`}>
                   {`Round ${idx + 1}`}
                   <span className="fw-light">— {headerTxt}</span>
                 </Card.Header>
 
-                <Row>
+                <Row className="g-0">
                   <Col>
                     <ListGroup variant="flush">
                       {round.map((playerRound, pIdx) => (

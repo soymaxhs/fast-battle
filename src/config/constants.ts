@@ -37,8 +37,9 @@ export const DEFAULT_PLAYERS: Player[] = [
   },
 ];
 
-export const DEFAULT_NORMAL_ROLLS = [1, 2, 3, 4, 5] as NormalDiceRolls;
-export const DEFAULT_SUDDEN_DEATH_ROLLS = [1, 2, 3] as SuddenDeathDiceRolls;
+export const DEFAULT_NORMAL_ROLLS = [1, 1, 1, 1, 1] as NormalDiceRolls;
+
+export const DEFAULT_SUDDEN_DEATH_ROLLS = [1, 1, 1] as SuddenDeathDiceRolls;
 
 export const DEFAULT_PLAYERS_ROUND: PlayersRound = [
   {

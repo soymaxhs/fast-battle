@@ -117,7 +117,7 @@ export function getUniqueMinDiceRoll(
  * @description Each player's dice roll is evaluated for its highest unique value. The player(s) with the highest unique value win.
  *
  * @param {PlayersRound} playersRound - Array of players with their round data.
- * @returns {number[]} Array of player IDs that won the normal round.
+ * @returns {number[]} Array of player index that won the normal round.
  */
 export function getNormalRoundWinnerPlayers(
   playersRound: PlayersRound
@@ -143,7 +143,7 @@ export function getNormalRoundWinnerPlayers(
  * @description Similar to normal round, but uses the lowest unique value instead of the highest.
  *
  * @param {PlayersRound} playersRound - Array of players with their sudden death round data.
- * @returns {number[]} Array of player IDs that won the sudden death round.
+ * @returns {number[]} Array of player index that won the sudden death round.
  */
 export function getSuddenDeathRoundWinnerPlayers(
   playersRound: PlayersRound

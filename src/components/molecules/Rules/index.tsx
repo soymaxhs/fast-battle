@@ -3,8 +3,8 @@ import { Accordion } from "react-bootstrap";
 export function Rules() {
   return (
     <Accordion
-      defaultActiveKey="0" /* first item open; remove for all closed */
-      alwaysOpen={false} /* true → multiple open at once */
+      defaultActiveKey="0"
+      alwaysOpen={false}
       className="container py-4 bg-light rounded-3"
     >
       {/* 1 · Goal */}
@@ -70,14 +70,10 @@ export function Rules() {
 
       {/* 4 · End of Match */}
       <Accordion.Item eventKey="3">
-        <Accordion.Header>4 · EndofMatch</Accordion.Header>
+        <Accordion.Header>4 · End of match</Accordion.Header>
         <Accordion.Body>
-          <ul className="list-group">
-            <li className="list-group-item">
-              A pre-set number of rounds elapses— the player with the
-              <strong> most victories</strong> wins.
-            </li>
-          </ul>
+          A pre-set number of rounds elapses— the player with the
+          <strong> most victories</strong> wins.
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
