@@ -15,6 +15,12 @@ A **Next.js 15 / React 19** mini‑game that pits players against each other i
 
 ---
 
+## 🌐 Live Demo
+
+Try it now → **[fast‑battle.vercel.app](https://fast-battle.vercel.app/)**
+
+---
+
 ## ✨ Tech Stack
 
 | Layer         | Library                                                     | Why                                           |
